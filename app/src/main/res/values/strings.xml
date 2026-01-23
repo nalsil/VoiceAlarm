@@ -17,4 +17,10 @@
     <string name="thu">Thu</string>
     <string name="fri">Fri</string>
     <string name="sat">Sat</string>
+    <string name="notification_permission_denied">Notification permission denied</string>
+    <string name="add_alarm_description">Add Alarm</string>
+    <string name="no_alarms_set">No alarms set. Tap + to add.</string>
+    <string name="edit_alarm">Edit Alarm</string>
+    <string name="request_exact_alarm_permission">Please allow permission to set exact alarms.</string>
+    <string name="delete_description">Delete</string>
 </resources>

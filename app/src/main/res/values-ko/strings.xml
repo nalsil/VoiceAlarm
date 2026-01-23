@@ -17,4 +17,10 @@
     <string name="thu">목</string>
     <string name="fri">금</string>
     <string name="sat">토</string>
+    <string name="notification_permission_denied">알림 권한이 거부되었습니다</string>
+    <string name="add_alarm_description">알람 추가</string>
+    <string name="no_alarms_set">설정된 알람이 없습니다. + 를 눌러 추가하세요.</string>
+    <string name="edit_alarm">알람 수정</string>
+    <string name="request_exact_alarm_permission">정확한 알람 설정을 위해 권한을 허용해주세요.</string>
+    <string name="delete_description">삭제</string>
 </resources>

@@ -70,7 +70,7 @@ fun MainScreen(viewModel: AlarmViewModel) {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (!isGranted) {
-            Toast.makeText(context, "Notification permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.notification_permission_denied), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -87,7 +87,7 @@ fun MainScreen(viewModel: AlarmViewModel) {
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Alarm")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_alarm_description))
             }
         }
     ) { innerPadding ->
@@ -126,7 +126,7 @@ private fun checkExactAlarmPermission(context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (!alarmManager.canScheduleExactAlarms()) {
             Log.w("MainActivity", "Exact Alarm permission is required. Prompting user.")
-            Toast.makeText(context, "정확한 알람 설정을 위해 권한을 허용해주세요.", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.request_exact_alarm_permission), Toast.LENGTH_LONG).show()
             val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
                 data = Uri.fromParts("package", context.packageName, null)
             }
@@ -147,7 +147,7 @@ fun AlarmListScreen(
 
     if (alarms.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "No alarms set. Tap + to add.")
+            Text(text = stringResource(R.string.no_alarms_set))
         }
     } else {
         LazyColumn(modifier = modifier.fillMaxSize()) {
@@ -211,7 +211,7 @@ fun AlarmItem(alarm: Alarm, onToggle: () -> Unit, onDelete: () -> Unit, onClick:
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Switch(checked = alarm.isEnabled, onCheckedChange = { onToggle() })
                 IconButton(onClick = onDelete) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete")
+                    Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete_description))
                 }
             }
         }
@@ -244,7 +244,7 @@ fun AlarmEditDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (alarm == null) stringResource(R.string.add_alarm) else "Edit Alarm") },
+        title = { Text(if (alarm == null) stringResource(R.string.add_alarm) else stringResource(R.string.edit_alarm)) },
         text = {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
