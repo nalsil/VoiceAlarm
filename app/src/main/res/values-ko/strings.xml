@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">말하는 알람</string>
+    <string name="add_alarm">알람 추가</string>
+    <string name="delete">삭제</string>
+    <string name="korean">한국어</string>
+    <string name="english">영어</string>
+    <string name="vibrate">진동</string>
+    <string name="volume">볼륨</string>
+    <string name="language">언어</string>
+    <string name="days">요일</string>
+    <string name="save">저장</string>
+    <string name="cancel">취소</string>
+    <string name="sun">일</string>
+    <string name="mon">월</string>
+    <string name="tue">화</string>
+    <string name="wed">수</string>
+    <string name="thu">목</string>
+    <string name="fri">금</string>
+    <string name="sat">토</string>
+</resources>

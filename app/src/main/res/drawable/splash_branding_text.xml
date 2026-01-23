@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    This is a placeholder for the splash screen branding text.
+    Please replace the content of this file with a vector drawable
+    that contains the text "Voice Alarm".
+    For example:
+    <vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="200dp"
+        android:height="48dp"
+        android:viewportWidth="200"
+        android:viewportHeight="48">
+        ... paths for the text ...
+    </vector>
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <size
+        android:width="200dp"
+        android:height="48dp" />
+    <solid android:color="@android:color/transparent" />
+</shape>

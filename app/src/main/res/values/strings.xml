@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Voice Alarm</string>
+    <string name="add_alarm">Add Alarm</string>
+    <string name="delete">Delete</string>
+    <string name="korean">Korean</string>
+    <string name="english">English</string>
+    <string name="vibrate">Vibrate</string>
+    <string name="volume">Volume</string>
+    <string name="language">Language</string>
+    <string name="days">Days</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="sun">Sun</string>
+    <string name="mon">Mon</string>
+    <string name="tue">Tue</string>
+    <string name="wed">Wed</string>
+    <string name="thu">Thu</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+</resources>
