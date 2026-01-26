@@ -1,21 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    This is a placeholder for the splash screen branding text.
-    Please replace the content of this file with a vector drawable
-    that contains the text "Voice Alarm".
-    For example:
-    <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="200dp"
-        android:height="48dp"
-        android:viewportWidth="200"
-        android:viewportHeight="48">
-        ... paths for the text ...
-    </vector>
--->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <size
-        android:width="200dp"
-        android:height="48dp" />
-    <solid android:color="@android:color/transparent" />
-</shape>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="180dp"
+    android:height="32dp"
+    android:viewportWidth="180"
+    android:viewportHeight="32">
+
+    <!-- V -->
+    <path
+        android:pathData="M4,6 L12,26 L20,6"
+        android:strokeWidth="3"
+        android:strokeColor="#FF9800"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+
+    <!-- O -->
+    <path
+        android:pathData="M32,16 m-8,0 a8,10 0 1,1 16,0 a8,10 0 1,1 -16,0"
+        android:strokeWidth="3"
+        android:strokeColor="#FF9800"
+        android:strokeLineCap="round"/>
+
+    <!-- I -->
+    <path
+        android:pathData="M52,6 L52,26"
+        android:strokeWidth="3"
+        android:strokeColor="#FF9800"
+        android:strokeLineCap="round"/>
+
+    <!-- C -->
+    <path
+        android:pathData="M72,10 A8,10 0 0,0 72,22"
+        android:strokeWidth="3"
+        android:strokeColor="#FF9800"
+        android:strokeLineCap="round"/>
+
+    <!-- E -->
+    <path
+        android:pathData="M92,6 L82,6 L82,26 L92,26 M82,16 L90,16"
+        android:strokeWidth="3"
+        android:strokeColor="#FF9800"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+
+    <!-- Space + A -->
+    <path
+        android:pathData="M104,26 L112,6 L120,26 M106,20 L118,20"
+        android:strokeWidth="3"
+        android:strokeColor="#F57C00"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+
+    <!-- L -->
+    <path
+        android:pathData="M128,6 L128,26 L140,26"
+        android:strokeWidth="3"
+        android:strokeColor="#F57C00"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+
+    <!-- A -->
+    <path
+        android:pathData="M146,26 L154,6 L162,26 M148,20 L160,20"
+        android:strokeWidth="3"
+        android:strokeColor="#F57C00"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+
+    <!-- R -->
+    <path
+        android:pathData="M168,26 L168,6 L176,6 A4,5 0 0,1 176,16 L168,16 L178,26"
+        android:strokeWidth="3"
+        android:strokeColor="#F57C00"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+
+    <!-- M -->
+    <path
+        android:pathData="M184,26 L184,6 L190,16 L196,6 L196,26"
+        android:strokeWidth="3"
+        android:strokeColor="#F57C00"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+
+</vector>

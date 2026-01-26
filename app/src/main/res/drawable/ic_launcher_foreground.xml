@@ -3,22 +3,74 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+
+    <!-- Scale down 20% and center -->
     <group
-        android:scaleX="0.6"
-        android:scaleY="0.6"
-        android:translateX="21.6"
-        android:translateY="21.6">
-        <group
-            android:translateX="-24"
-            android:translateY="-12">
-            <path
-                android:pathData="M15,50 C30,-10 70,-10 85,50"
-                android:strokeWidth="8"
-                android:strokeColor="#FF3F51B5" />
-            <path
-                android:pathData="M85,50 C100,110 140,110 155,50"
-                android:strokeWidth="8"
-                android:strokeColor="#FF3F51B5" />
-        </group>
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:pivotX="54"
+        android:pivotY="54">
+
+        <!-- Bell Top Handle -->
+        <path
+            android:pathData="M54,24 L54,30"
+            android:strokeWidth="4"
+            android:strokeColor="#000000"
+            android:strokeLineCap="round"/>
+
+        <!-- Bell Body (Orange Fill) -->
+        <path
+            android:pathData="M54,30
+                             C38,30 32,42 32,56
+                             L32,62
+                             C32,64 33,65 35,65
+                             L73,65
+                             C75,65 76,64 76,62
+                             L76,56
+                             C76,42 70,30 54,30 Z"
+            android:fillColor="#FF9800"
+            android:strokeWidth="3"
+            android:strokeColor="#000000"/>
+
+        <!-- Bell Clapper -->
+        <path
+            android:pathData="M54,69
+                             C50,69 47,72 47,76
+                             C47,80 50,83 54,83
+                             C58,83 61,80 61,76
+                             C61,72 58,69 54,69 Z"
+            android:fillColor="#FF9800"
+            android:strokeWidth="3"
+            android:strokeColor="#000000"/>
+
+        <!-- Left Sound Wave 1 (inner) -->
+        <path
+            android:pathData="M28,40 Q22,48 28,56"
+            android:strokeWidth="4"
+            android:strokeColor="#000000"
+            android:strokeLineCap="round"/>
+
+        <!-- Left Sound Wave 2 (outer) -->
+        <path
+            android:pathData="M20,34 Q12,48 20,62"
+            android:strokeWidth="4"
+            android:strokeColor="#000000"
+            android:strokeLineCap="round"/>
+
+        <!-- Right Sound Wave 1 (inner) -->
+        <path
+            android:pathData="M80,40 Q86,48 80,56"
+            android:strokeWidth="4"
+            android:strokeColor="#000000"
+            android:strokeLineCap="round"/>
+
+        <!-- Right Sound Wave 2 (outer) -->
+        <path
+            android:pathData="M88,34 Q96,48 88,62"
+            android:strokeWidth="4"
+            android:strokeColor="#000000"
+            android:strokeLineCap="round"/>
+
     </group>
+
 </vector>
