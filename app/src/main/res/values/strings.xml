@@ -23,4 +23,12 @@
     <string name="edit_alarm">Edit Alarm</string>
     <string name="request_exact_alarm_permission">Please allow permission to set exact alarms.</string>
     <string name="delete_description">Delete</string>
+
+    <!-- For AlarmService TTS -->
+    <!-- Format: The current time is {12} {o'clock/35} {AM/PM}. -->
+    <string name="tts_current_time_is">The current time is %1$s %2$s %3$s.</string>
+    <string name="tts_oclock">o\'clock</string>
+    <string name="tts_minute">%d</string>
+    <string name="tts_am">AM</string>
+    <string name="tts_pm">PM</string>
 </resources>

@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">말하는 알람</string>
+    <string name="app_name">보이스 알람</string>
     <string name="add_alarm">알람 추가</string>
     <string name="delete">삭제</string>
     <string name="korean">한국어</string>
@@ -17,10 +18,18 @@
     <string name="thu">목</string>
     <string name="fri">금</string>
     <string name="sat">토</string>
-    <string name="notification_permission_denied">알림 권한이 거부되었습니다</string>
+    <string name="notification_permission_denied">알림 권한이 거부되었습니다.</string>
     <string name="add_alarm_description">알람 추가</string>
-    <string name="no_alarms_set">설정된 알람이 없습니다. + 를 눌러 추가하세요.</string>
+    <string name="no_alarms_set">설정된 알람이 없습니다. +를 눌러 추가하세요.</string>
     <string name="edit_alarm">알람 수정</string>
     <string name="request_exact_alarm_permission">정확한 알람 설정을 위해 권한을 허용해주세요.</string>
     <string name="delete_description">삭제</string>
+
+    <!-- For AlarmService TTS -->
+    <!-- Format: 현재 시간은 {오전/오후} {12}시 {정각/35분}입니다. -->
+    <string name="tts_current_time_is">현재 시간은 %1$s %2$s시 %3$s입니다.</string>
+    <string name="tts_oclock">정각</string>
+    <string name="tts_minute">%d분</string>
+    <string name="tts_am">오전</string>
+    <string name="tts_pm">오후</string>
 </resources>

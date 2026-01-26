@@ -7,6 +7,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.content.res.Configuration
 import android.media.AudioAttributes
 import android.media.Ringtone
 import android.media.RingtoneManager
@@ -116,6 +117,14 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
         }
     }
 
+    private fun getContextWithLocale(languageCode: String): Context {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val config = Configuration(resources.configuration)
+        config.setLocale(locale)
+        return createConfigurationContext(config)
+    }
+
     private fun speakTime() {
         ringtone?.stop()
         val locale = Locale(alarm.languageCode)
@@ -126,7 +135,8 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
         }
         tts?.language = locale
 
-        tts?.setAudioAttributes(AudioAttributes.Builder()
+        tts?.setAudioAttributes(
+            AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_ALARM)
             .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
             .build())
@@ -134,10 +144,17 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
+
+        val localizedContext = getContextWithLocale(alarm.languageCode)
+
+        val amPm = if (hour >= 12) localizedContext.getString(R.string.tts_pm) else localizedContext.getString(R.string.tts_am)
+        val hour12 = if (hour % 12 == 0) 12 else hour % 12
+        val minuteStr = if (minute == 0) localizedContext.getString(R.string.tts_oclock) else localizedContext.getString(R.string.tts_minute, minute)
+
         val timeString = if (alarm.languageCode == "ko") {
-            "현재 시간은 ${if (hour >= 12) "오후" else "오전"} ${if (hour % 12 == 0) 12 else hour % 12}시 ${if (minute == 0) "정각" else "${minute}분"}입니다."
+            localizedContext.getString(R.string.tts_current_time_is, amPm, hour12.toString(), minuteStr)
         } else {
-            "The current time is ${if (hour % 12 == 0) 12 else hour % 12} ${if (minute == 0) "o'clock" else minute} ${if (hour >= 12) "PM" else "AM"}."
+            localizedContext.getString(R.string.tts_current_time_is, hour12.toString(), minuteStr, amPm)
         }
 
         val params = Bundle().apply {
