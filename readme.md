@@ -30,7 +30,10 @@
 2.  Android Studio에서 프로젝트를 엽니다.
 3.  필요한 Gradle 종속성이 동기화될 때까지 기다립니다.
 4.  애플리케이션을 빌드하고 실행합니다.
-
+5.  개인정보처리지침 URL
+    ```
+    https://nalsil.github.io/VoiceAlarm/doc/privacy_policy
+    ```
 ## 📄 라이선스
 
 이 프로젝트는 [MIT 라이선스](LICENSE) 하에 배포됩니다.
