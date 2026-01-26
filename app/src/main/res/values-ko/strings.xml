@@ -11,6 +11,8 @@
     <string name="days">요일</string>
     <string name="save">저장</string>
     <string name="cancel">취소</string>
+    <string name="dismiss_alarm">해제</string>
+    <string name="alarm_ringing">알람</string>
     <string name="sun">일</string>
     <string name="mon">월</string>
     <string name="tue">화</string>

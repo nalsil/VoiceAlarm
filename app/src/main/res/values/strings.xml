@@ -10,6 +10,8 @@
     <string name="days">Days</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="dismiss_alarm">Dismiss</string>
+    <string name="alarm_ringing">Alarm</string>
     <string name="sun">Sun</string>
     <string name="mon">Mon</string>
     <string name="tue">Tue</string>

@@ -3,6 +3,7 @@ package com.nalsil.voicealarm.service
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -21,6 +22,7 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.nalsil.voicealarm.AlarmActivity
 import com.nalsil.voicealarm.R
 import com.nalsil.voicealarm.data.Alarm
 import com.nalsil.voicealarm.data.AlarmDatabase
@@ -182,17 +184,39 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
                 "ALARM_SERVICE_CHANNEL",
                 "Alarm Service Channel",
                 NotificationManager.IMPORTANCE_HIGH
-            )
+            ).apply {
+                description = "Shows notification when alarm triggers"
+                setSound(null, null) // Sound is handled by the service
+                enableVibration(true)
+            }
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
         }
     }
 
     private fun createNotification(): Notification {
+        // Intent to launch when notification is tapped or for full screen intent
+        val fullScreenIntent = Intent(this, AlarmActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+        val fullScreenPendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            fullScreenIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         return NotificationCompat.Builder(this, "ALARM_SERVICE_CHANNEL")
             .setContentTitle("Voice Alarm")
             .setContentText("알람이 울리고 있습니다...")
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // Ensure this drawable exists
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setFullScreenIntent(fullScreenPendingIntent, true) // IMPORTANT: Triggers activity from background
+            .setContentIntent(fullScreenPendingIntent)
+            .setAutoCancel(false)
+            .setOngoing(true)
             .build()
     }
 
