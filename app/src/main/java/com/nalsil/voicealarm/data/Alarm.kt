@@ -13,5 +13,6 @@ data class Alarm(
     val languageCode: String = "ko", // Default to Korean
     val volume: Float = 1.0f,
     val vibrate: Boolean = true,
-    val label: String = ""
+    val label: String = "",
+    val lastTriggeredAt: Long? = null // Timestamp of last successful alarm trigger
 )

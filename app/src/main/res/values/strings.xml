@@ -25,6 +25,7 @@
     <string name="edit_alarm">Edit Alarm</string>
     <string name="request_exact_alarm_permission">Please allow permission to set exact alarms.</string>
     <string name="delete_description">Delete</string>
+    <string name="last_triggered">Last triggered</string>
 
     <!-- For AlarmService TTS -->
     <!-- Format: The current time is {12} {o'clock/35} {AM/PM}. -->

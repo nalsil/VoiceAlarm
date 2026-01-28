@@ -11,6 +11,10 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -207,6 +211,17 @@ fun AlarmItem(alarm: Alarm, onToggle: () -> Unit, onDelete: () -> Unit, onClick:
                         )
                     }
                 }
+                // 마지막 실행 시간 표시
+                alarm.lastTriggeredAt?.let { timestamp ->
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                    Text(
+                        text = "${stringResource(R.string.last_triggered)}: ${dateFormat.format(Date(timestamp))}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray,
+                        fontSize = 10.sp,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Switch(checked = alarm.isEnabled, onCheckedChange = { onToggle() })
@@ -224,8 +239,9 @@ fun AlarmEditDialog(
     onDismiss: () -> Unit,
     onConfirm: (Alarm) -> Unit
 ) {
-    var hour by remember { mutableIntStateOf(alarm?.hour ?: 8) }
-    var minute by remember { mutableIntStateOf(alarm?.minute ?: 0) }
+    val currentTime = remember { Calendar.getInstance() }
+    var hour by remember { mutableIntStateOf(alarm?.hour ?: currentTime.get(Calendar.HOUR_OF_DAY)) }
+    var minute by remember { mutableIntStateOf(alarm?.minute ?: currentTime.get(Calendar.MINUTE)) }
     var languageCode by remember { mutableStateOf(alarm?.languageCode ?: "ko") }
     var volume by remember { mutableFloatStateOf(alarm?.volume ?: 1.0f) }
     var vibrate by remember { mutableStateOf(alarm?.vibrate ?: true) }

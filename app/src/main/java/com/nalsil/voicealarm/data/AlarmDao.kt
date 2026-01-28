@@ -19,4 +19,7 @@ interface AlarmDao {
 
     @Delete
     suspend fun deleteAlarm(alarm: Alarm): Int
+
+    @Query("UPDATE alarms SET lastTriggeredAt = :timestamp WHERE id = :alarmId")
+    suspend fun updateLastTriggeredAt(alarmId: Int, timestamp: Long)
 }
