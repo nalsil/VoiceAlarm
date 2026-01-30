@@ -60,6 +60,9 @@ dependencies {
     // WorkManager - for reliable alarm verification in Doze mode
     implementation(libs.androidx.work.runtime)
 
+    // Concurrent Futures - for ListenableFuture support (unused app restrictions API)
+    implementation(libs.concurrent.futures)
+
     // Google AdMob
     implementation(libs.play.services.ads)
 

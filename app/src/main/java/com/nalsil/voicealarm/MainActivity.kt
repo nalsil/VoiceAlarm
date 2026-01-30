@@ -44,7 +44,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.concurrent.futures.await
 import androidx.core.content.ContextCompat
+import androidx.core.content.PackageManagerCompat
+import androidx.core.content.UnusedAppRestrictionsConstants
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -54,9 +57,6 @@ import com.nalsil.voicealarm.data.Alarm
 import com.nalsil.voicealarm.ui.AlarmViewModel
 import com.nalsil.voicealarm.ui.theme.VoiceAlarmTheme
 import com.nalsil.voicealarm.worker.AlarmVerificationWorker
-
-private const val PREFS_NAME = "voice_alarm_prefs"
-private const val KEY_HIBERNATION_DIALOG_SHOWN = "hibernation_dialog_shown"
 
 // AdMob 배너 광고 ID (테스트용 - 배포 전 실제 ID로 교체 필요)
 private const val BANNER_AD_UNIT_ID = "ca-app-pub-3940256099942544/6300978111"
@@ -109,16 +109,30 @@ fun MainScreen(viewModel: AlarmViewModel) {
         }
         checkExactAlarmPermission(context)
 
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-
         // Check battery optimization status
         if (!isIgnoringBatteryOptimizations(context)) {
             showBatteryOptimizationDialog = true
         } else {
-            // App hibernation dialog is shown only once (first time)
-            val hibernationShown = prefs.getBoolean(KEY_HIBERNATION_DIALOG_SHOWN, false)
-            if (!hibernationShown) {
-                showAppHibernationDialog = true
+            // Check app hibernation status using official API
+            try {
+                val future = PackageManagerCompat.getUnusedAppRestrictionsStatus(context)
+                when (future.await()) {
+                    UnusedAppRestrictionsConstants.DISABLED -> {
+                        // User has already disabled hibernation - no dialog needed
+                    }
+                    UnusedAppRestrictionsConstants.API_30,
+                    UnusedAppRestrictionsConstants.API_30_BACKPORT,
+                    UnusedAppRestrictionsConstants.API_31 -> {
+                        // Hibernation is enabled - show dialog
+                        showAppHibernationDialog = true
+                    }
+                    UnusedAppRestrictionsConstants.FEATURE_NOT_AVAILABLE,
+                    UnusedAppRestrictionsConstants.ERROR -> {
+                        // Feature not available or error - no dialog needed
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Failed to check unused app restrictions", e)
             }
         }
     }
@@ -166,23 +180,17 @@ fun MainScreen(viewModel: AlarmViewModel) {
 
         // Battery Optimization Dialog
         if (showBatteryOptimizationDialog) {
-            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val hibernationShown = prefs.getBoolean(KEY_HIBERNATION_DIALOG_SHOWN, false)
             BatteryOptimizationDialog(
                 onDismiss = {
                     showBatteryOptimizationDialog = false
-                    // After dismissing battery dialog, show app hibernation warning (only if not shown before)
-                    if (!hibernationShown) {
-                        showAppHibernationDialog = true
-                    }
+                    // After dismissing battery dialog, show app hibernation warning
+                    showAppHibernationDialog = true
                 },
                 onOpenSettings = {
                     showBatteryOptimizationDialog = false
                     requestIgnoreBatteryOptimization(context)
-                    // Show app hibernation dialog after returning (only if not shown before)
-                    if (!hibernationShown) {
-                        showAppHibernationDialog = true
-                    }
+                    // Show app hibernation dialog after returning
+                    showAppHibernationDialog = true
                 }
             )
         }
@@ -192,15 +200,9 @@ fun MainScreen(viewModel: AlarmViewModel) {
             AppHibernationDialog(
                 onDismiss = {
                     showAppHibernationDialog = false
-                    // Record that the dialog has been shown
-                    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                        .edit().putBoolean(KEY_HIBERNATION_DIALOG_SHOWN, true).apply()
                 },
                 onOpenSettings = {
                     showAppHibernationDialog = false
-                    // Record that the dialog has been shown
-                    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                        .edit().putBoolean(KEY_HIBERNATION_DIALOG_SHOWN, true).apply()
                     openAppSettings(context)
                 }
             )
