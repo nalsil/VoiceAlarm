@@ -147,7 +147,9 @@ fun MainScreen(viewModel: AlarmViewModel) {
         bottomBar = {
             BannerAd(
                 adUnitId = BANNER_AD_UNIT_ID,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
             )
         }
     ) { innerPadding ->
