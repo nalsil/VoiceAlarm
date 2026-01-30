@@ -22,6 +22,9 @@
     <!-- Battery Optimization - Required for reliable alarm delivery in Doze mode -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
+    <!-- AdMob -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -33,6 +36,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App"
         android:enableOnBackInvokedCallback="true">
+
+        <!-- AdMob App ID (테스트용 - 배포 전 실제 ID로 교체 필요) -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -43,8 +43,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.nalsil.voicealarm.data.Alarm
 import com.nalsil.voicealarm.ui.AlarmViewModel
 import com.nalsil.voicealarm.ui.theme.VoiceAlarmTheme
@@ -53,6 +58,9 @@ import com.nalsil.voicealarm.worker.AlarmVerificationWorker
 private const val PREFS_NAME = "voice_alarm_prefs"
 private const val KEY_HIBERNATION_DIALOG_SHOWN = "hibernation_dialog_shown"
 
+// AdMob 배너 광고 ID (테스트용 - 배포 전 실제 ID로 교체 필요)
+private const val BANNER_AD_UNIT_ID = "ca-app-pub-3940256099942544/6300978111"
+
 class MainActivity : ComponentActivity() {
     private val viewModel: AlarmViewModel by viewModels()
 
@@ -60,6 +68,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // Handle the splash screen transition.
         installSplashScreen()
+
+        // Initialize Mobile Ads SDK
+        MobileAds.initialize(this) {}
 
         // Start WorkManager for periodic alarm verification
         // This ensures alarms are rescheduled even if the app is paused by system
@@ -118,6 +129,12 @@ fun MainScreen(viewModel: AlarmViewModel) {
             FloatingActionButton(onClick = { showAddDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_alarm_description))
             }
+        },
+        bottomBar = {
+            BannerAd(
+                adUnitId = BANNER_AD_UNIT_ID,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     ) { innerPadding ->
         AlarmListScreen(
@@ -527,4 +544,24 @@ fun NumberPicker(value: Int, range: IntRange, onValueChange: (Int) -> Unit) {
             Text("▼")
         }
     }
+}
+
+/**
+ * AdMob Banner Ad Composable
+ */
+@Composable
+fun BannerAd(
+    adUnitId: String,
+    modifier: Modifier = Modifier
+) {
+    AndroidView(
+        modifier = modifier,
+        factory = { context ->
+            AdView(context).apply {
+                setAdSize(AdSize.BANNER)
+                this.adUnitId = adUnitId
+                loadAd(AdRequest.Builder().build())
+            }
+        }
+    )
 }

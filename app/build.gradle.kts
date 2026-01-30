@@ -60,6 +60,9 @@ dependencies {
     // WorkManager - for reliable alarm verification in Doze mode
     implementation(libs.androidx.work.runtime)
 
+    // Google AdMob
+    implementation(libs.play.services.ads)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
