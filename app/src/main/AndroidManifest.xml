@@ -19,6 +19,9 @@
     <!-- Boot Permission -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- Battery Optimization - Required for reliable alarm delivery in Doze mode -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
 
     <application
         android:allowBackup="true"

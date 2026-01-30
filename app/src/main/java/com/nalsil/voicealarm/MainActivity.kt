@@ -1,6 +1,7 @@
 package com.nalsil.voicealarm
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
@@ -46,6 +48,10 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.nalsil.voicealarm.data.Alarm
 import com.nalsil.voicealarm.ui.AlarmViewModel
 import com.nalsil.voicealarm.ui.theme.VoiceAlarmTheme
+import com.nalsil.voicealarm.worker.AlarmVerificationWorker
+
+private const val PREFS_NAME = "voice_alarm_prefs"
+private const val KEY_HIBERNATION_DIALOG_SHOWN = "hibernation_dialog_shown"
 
 class MainActivity : ComponentActivity() {
     private val viewModel: AlarmViewModel by viewModels()
@@ -54,6 +60,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // Handle the splash screen transition.
         installSplashScreen()
+
+        // Start WorkManager for periodic alarm verification
+        // This ensures alarms are rescheduled even if the app is paused by system
+        AlarmVerificationWorker.schedule(this)
 
         enableEdgeToEdge()
         setContent {
@@ -68,6 +78,8 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(viewModel: AlarmViewModel) {
     var showAddDialog by remember { mutableStateOf(false) }
     var alarmToEdit by remember { mutableStateOf<Alarm?>(null) }
+    var showBatteryOptimizationDialog by remember { mutableStateOf(false) }
+    var showAppHibernationDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -85,6 +97,19 @@ fun MainScreen(viewModel: AlarmViewModel) {
             }
         }
         checkExactAlarmPermission(context)
+
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+        // Check battery optimization status
+        if (!isIgnoringBatteryOptimizations(context)) {
+            showBatteryOptimizationDialog = true
+        } else {
+            // App hibernation dialog is shown only once (first time)
+            val hibernationShown = prefs.getBoolean(KEY_HIBERNATION_DIALOG_SHOWN, false)
+            if (!hibernationShown) {
+                showAppHibernationDialog = true
+            }
+        }
     }
 
     Scaffold(
@@ -121,6 +146,48 @@ fun MainScreen(viewModel: AlarmViewModel) {
                 }
             )
         }
+
+        // Battery Optimization Dialog
+        if (showBatteryOptimizationDialog) {
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val hibernationShown = prefs.getBoolean(KEY_HIBERNATION_DIALOG_SHOWN, false)
+            BatteryOptimizationDialog(
+                onDismiss = {
+                    showBatteryOptimizationDialog = false
+                    // After dismissing battery dialog, show app hibernation warning (only if not shown before)
+                    if (!hibernationShown) {
+                        showAppHibernationDialog = true
+                    }
+                },
+                onOpenSettings = {
+                    showBatteryOptimizationDialog = false
+                    requestIgnoreBatteryOptimization(context)
+                    // Show app hibernation dialog after returning (only if not shown before)
+                    if (!hibernationShown) {
+                        showAppHibernationDialog = true
+                    }
+                }
+            )
+        }
+
+        // App Hibernation Warning Dialog
+        if (showAppHibernationDialog) {
+            AppHibernationDialog(
+                onDismiss = {
+                    showAppHibernationDialog = false
+                    // Record that the dialog has been shown
+                    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                        .edit().putBoolean(KEY_HIBERNATION_DIALOG_SHOWN, true).apply()
+                },
+                onOpenSettings = {
+                    showAppHibernationDialog = false
+                    // Record that the dialog has been shown
+                    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                        .edit().putBoolean(KEY_HIBERNATION_DIALOG_SHOWN, true).apply()
+                    openAppSettings(context)
+                }
+            )
+        }
     }
 }
 
@@ -139,6 +206,95 @@ private fun checkExactAlarmPermission(context: Context) {
             Log.i("MainActivity", "Exact Alarm permission is already granted.")
         }
     }
+}
+
+/**
+ * Check if the app is ignoring battery optimizations (exempt from Doze mode).
+ */
+private fun isIgnoringBatteryOptimizations(context: Context): Boolean {
+    val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    return powerManager.isIgnoringBatteryOptimizations(context.packageName)
+}
+
+/**
+ * Request the user to disable battery optimization for this app.
+ * This is allowed by Google Play policy for alarm apps.
+ */
+@SuppressLint("BatteryLife")
+private fun requestIgnoreBatteryOptimization(context: Context) {
+    try {
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+            data = Uri.parse("package:${context.packageName}")
+        }
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        Log.e("MainActivity", "Failed to open battery optimization settings", e)
+        // Fallback to general battery settings
+        try {
+            val fallbackIntent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+            context.startActivity(fallbackIntent)
+        } catch (e2: Exception) {
+            Log.e("MainActivity", "Failed to open general battery settings", e2)
+        }
+    }
+}
+
+/**
+ * Open the app's settings page where user can disable "Pause app activity when unused".
+ */
+private fun openAppSettings(context: Context) {
+    try {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", context.packageName, null)
+        }
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        Log.e("MainActivity", "Failed to open app settings", e)
+    }
+}
+
+@Composable
+fun BatteryOptimizationDialog(
+    onDismiss: () -> Unit,
+    onOpenSettings: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.battery_optimization_title)) },
+        text = { Text(stringResource(R.string.battery_optimization_message)) },
+        confirmButton = {
+            Button(onClick = onOpenSettings) {
+                Text(stringResource(R.string.battery_optimization_action))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.battery_optimization_dismiss))
+            }
+        }
+    )
+}
+
+@Composable
+fun AppHibernationDialog(
+    onDismiss: () -> Unit,
+    onOpenSettings: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.app_hibernation_title)) },
+        text = { Text(stringResource(R.string.app_hibernation_message)) },
+        confirmButton = {
+            Button(onClick = onOpenSettings) {
+                Text(stringResource(R.string.app_hibernation_action))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.battery_optimization_dismiss))
+            }
+        }
+    )
 }
 
 @Composable

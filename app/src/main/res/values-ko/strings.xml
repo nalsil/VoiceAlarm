@@ -35,4 +35,15 @@
     <string name="tts_minute">%d분</string>
     <string name="tts_am">오전</string>
     <string name="tts_pm">오후</string>
+
+    <!-- Battery Optimization -->
+    <string name="battery_optimization_title">배터리 최적화 설정 필요</string>
+    <string name="battery_optimization_message">알람이 정확하게 울리도록 하려면 이 앱의 배터리 최적화를 비활성화해주세요. 앱을 사용하지 않을 때도 알람이 정상 작동합니다.</string>
+    <string name="battery_optimization_action">설정 열기</string>
+    <string name="battery_optimization_dismiss">나중에</string>
+
+    <!-- App Hibernation Warning -->
+    <string name="app_hibernation_title">앱 활동 일시중지 설정됨</string>
+    <string name="app_hibernation_message">\"사용하지 않을 때 앱 활동 일시중지\"가 활성화되어 있습니다. 앱을 사용하지 않으면 알람이 작동하지 않을 수 있습니다.\n\n해결 방법:\n1. 설정 > 앱 > 보이스 알람으로 이동\n2. \"사용하지 않을 때 앱 활동 일시중지\" 찾기\n3. 이 옵션을 비활성화</string>
+    <string name="app_hibernation_action">앱 설정 열기</string>
 </resources>

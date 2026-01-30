@@ -34,4 +34,15 @@
     <string name="tts_minute">%d</string>
     <string name="tts_am">AM</string>
     <string name="tts_pm">PM</string>
+
+    <!-- Battery Optimization -->
+    <string name="battery_optimization_title">Battery Optimization Required</string>
+    <string name="battery_optimization_message">To ensure alarms work reliably, please disable battery optimization for this app. This prevents the system from stopping alarms when the app is not in use.</string>
+    <string name="battery_optimization_action">Open Settings</string>
+    <string name="battery_optimization_dismiss">Later</string>
+
+    <!-- App Hibernation Warning -->
+    <string name="app_hibernation_title">App Pausing Enabled</string>
+    <string name="app_hibernation_message">\"Pause app activity when unused\" is enabled for this app. This may prevent alarms from working after the app has been unused for a while.\n\nTo fix this:\n1. Open Settings > Apps > Voice Alarm\n2. Find \"Pause app activity when unused\"\n3. Disable this option</string>
+    <string name="app_hibernation_action">Open App Settings</string>
 </resources>
